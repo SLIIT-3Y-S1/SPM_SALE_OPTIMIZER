@@ -2,7 +2,10 @@
 
 const SpecialFunctionHomePage = () => {
   return (
-    <div>SpecialFunctionHomePage</div>
+    <div className='bg-red-800 w-full h-full ml-[200px]'>
+      Special Function Home Page
+       /// your other components
+    </div>
   )
 }
 

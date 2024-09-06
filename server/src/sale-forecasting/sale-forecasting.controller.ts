@@ -27,7 +27,6 @@ export class SaleForecastingController {
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard)
   findAll() {
     return this.saleForecastingService.findAll();
   }
