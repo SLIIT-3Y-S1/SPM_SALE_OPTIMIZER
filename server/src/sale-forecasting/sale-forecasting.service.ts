@@ -32,7 +32,13 @@ export class SaleForecastingService {
   }
 
   async findAll():Promise<responseFormat> {
-    const result = await this.prismaService.sale.findMany();
+    const result = await this.prismaService.sale.findMany(
+      {
+        orderBy:{
+          created_at:"asc"
+        }
+      }
+    );
     return  this.commonResponse(result)
   }
 
@@ -50,7 +56,7 @@ async update(id: string, saleUpdate: UpdateSaleDto) {
             {
               where:{sale_id:id},
               data:{
-                quantity_sold:saleUpdate.quantity,
+                quantity_sold:saleUpdate.quantity_sold,
                 total_price:saleUpdate.total_price
               }
             }
