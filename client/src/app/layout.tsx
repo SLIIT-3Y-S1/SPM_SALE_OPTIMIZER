@@ -18,10 +18,10 @@ export default function RootLayout({
   return (
     <html lang="en">
     <body>
-        <Sidebar />
+        <Sidebar>
         <main>{children}</main>
-        
-      </body>
+        </Sidebar>
+    </body>
     </html>
   );
 }
