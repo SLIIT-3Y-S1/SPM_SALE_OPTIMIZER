@@ -1,11 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCustomerSegmentDto } from './dto/create-customer-segment.dto';
 import { UpdateCustomerSegmentDto } from './dto/update-customer-segment.dto';
+import { PrismaService } from 'src/database/prisma.service';
 
 @Injectable()
 export class CustomerSegmentService {
+  constructor(private readonly prismaService:PrismaService) {}
+
   create(createCustomerSegmentDto: CreateCustomerSegmentDto) {
-    return 'This action adds a new customerSegment';
+    return `This action returns all customerSegment000`;
   }
 
   findAll() {
