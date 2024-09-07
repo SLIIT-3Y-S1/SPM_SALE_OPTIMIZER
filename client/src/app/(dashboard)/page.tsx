@@ -1,8 +1,7 @@
-import React from 'react'
 
 const DashBoard = () => {
   return (
-    <div>DashBoard</div>
+    <div className='bg-red-800 w-full h-full ml-[200px]'>DashBoard</div>
   )
 }
 

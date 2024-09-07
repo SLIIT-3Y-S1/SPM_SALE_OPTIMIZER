@@ -1,15 +1,29 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  UseGuards,
+  Put,
+} from '@nestjs/common';
 import { SaleForecastingService } from './sale-forecasting.service';
-import { CreateSaleForecastingDto } from './dto/create-sale-forecasting.dto';
-import { UpdateSaleForecastingDto } from './dto/update-sale-forecasting.dto';
+import { UpdateSaleDto } from './dto/update-sale.dto';
+import { JwtAuthGuard } from 'src/auth/guards';
+import { CreateSaleDto } from './dto';
+import { responseFormat } from 'src/common/types';
 
-@Controller('sale-forecasting')
+@Controller('sale')
 export class SaleForecastingController {
-  constructor(private readonly saleForecastingService: SaleForecastingService) {}
+  constructor(
+    private readonly saleForecastingService: SaleForecastingService,
+  ) {}
 
   @Post()
-  create(@Body() createSaleForecastingDto: CreateSaleForecastingDto) {
-    return this.saleForecastingService.create(createSaleForecastingDto);
+  @UseGuards(JwtAuthGuard)
+  create(@Body() createSaleDto:CreateSaleDto ) {
+    return this.saleForecastingService.create(createSaleDto);
   }
 
   @Get()
@@ -18,17 +32,23 @@ export class SaleForecastingController {
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   findOne(@Param('id') id: string) {
-    return this.saleForecastingService.findOne(+id);
+    return this.saleForecastingService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSaleForecastingDto: UpdateSaleForecastingDto) {
-    return this.saleForecastingService.update(+id, updateSaleForecastingDto);
+  @Put(':id')
+  @UseGuards(JwtAuthGuard)
+  update(
+    @Param('id') id: string,
+    @Body() updateSaleDto: UpdateSaleDto,
+  ):Promise<responseFormat> {
+    return this.saleForecastingService.update(id, updateSaleDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.saleForecastingService.remove(+id);
+  @UseGuards(JwtAuthGuard)
+  remove(@Param('id') id: string):Promise<responseFormat> {
+    return this.saleForecastingService.remove(id);
   }
 }
