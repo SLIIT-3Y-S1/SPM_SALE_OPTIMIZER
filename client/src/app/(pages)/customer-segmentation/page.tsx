@@ -1,7 +1,10 @@
 
 const CustomerHomePage = () => {
   return (
-    <div>CustomerHomePage</div>
+    <div className='bg-red-800 w-full h-full ml-[200px]'>
+      Customer Home Page
+       /// your other components
+    </div>
   )
 }
 

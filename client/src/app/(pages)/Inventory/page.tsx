@@ -2,7 +2,10 @@
 
 const InventoryHomePage = () => {
   return (
-    <div>InventoryHomePage</div>
+    <div className='bg-red-800 w-full h-full ml-[200px]'>
+      Inventory Home Page
+       /// your other components
+    </div>
   )
 }
 
