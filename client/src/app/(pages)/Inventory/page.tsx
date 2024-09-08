@@ -1,4 +1,5 @@
 import React from "react"
+import Link from "next/link"
 import styles from './styles.module.css'
 
 const InventoryHomePage = () => {
@@ -20,7 +21,7 @@ const InventoryHomePage = () => {
       </div>
 
       <div className={styles.column}>
-        <button className={styles.button}> Inventory Management</button>
+        <Link href='/Inventory/inventory-management' ><button className={styles.button}>Inventory Management</button></Link>
         <button className={styles.button}> Report Generation</button>
         <button className={styles.button}> Integrate with Sales Forecasting</button>
       </div>
