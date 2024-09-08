@@ -5,7 +5,7 @@ import AddBtn from "@/componets/sale-components/AddBtn";
 import { SaleList } from "@/componets/sale-components/SaleList";
 import { fetchSales, Sale } from "@/lib/services/saleServices";
 import { SearchBar } from "@/componets/sale-components/SearchBar";
-import { CircularProgress } from "@mui/material"; // Use Material-UI spinner
+import { CircularProgress } from "@mui/material";
 
 const SaleForecastHomePage = () => {
   const [sales, setSales] = useState<Sale[]>([]);
