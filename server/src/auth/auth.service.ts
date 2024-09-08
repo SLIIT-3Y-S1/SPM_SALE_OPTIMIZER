@@ -42,7 +42,8 @@ export class AuthService {
             data: {
                 username: signUpDto.username,
                 email: signUpDto.email,
-                hash_password: hashPsd
+                hash_password: hashPsd,
+                is_verified: 'false'
             }
         });
         const tokens = await this.tokenService.generateToken(user);
