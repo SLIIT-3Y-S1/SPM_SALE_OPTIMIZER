@@ -7,7 +7,7 @@ const SaleForecastHomePage = async () => {
   const sales: Sale[] = await fetchSales();
 
   return (
-   <div className='flex-row bg-red-800 w-full]'>
+   <div className=''>
       Customer Home Page
        {/*your other components*/}
        <SaleList sales={sales} />

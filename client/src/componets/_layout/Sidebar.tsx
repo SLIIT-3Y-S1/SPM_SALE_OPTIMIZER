@@ -1,6 +1,9 @@
+'use client'
+
 import React from "react";
 import Link from "next/link";
 import Header from "./Header";
+import {usePathname} from 'next/navigation'
 
 //import icons here
 import { MdOutlineDashboard } from "react-icons/md";
@@ -11,6 +14,12 @@ import { MdOutlineAnalytics } from "react-icons/md";
 
 
 const Sidebar = ({ children }) => {
+
+  const pathname = usePathname()
+  const isSelected = (pathname:string) =>{
+    return location.pathname.includes(pathname)
+  }
+
   return (
     <nav className="w-screen min-h-screen">
       <Header />
