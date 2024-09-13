@@ -12,6 +12,7 @@ model User{
   username String @unique
   email String @unique
   hash_password String
+  hash_refresh_token  String?
   is_verified String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -126,3 +127,16 @@ model Sale {
   product     Product @relation(fields: [product_id], references: [product_id])
   product_variant ProductVariant? @relation(fields: [variant_id], references: [variant_id])
 }
+
+
+model Inventory {
+  id            Int      @id @default(autoincrement())
+  product_name  String
+  category      String
+  stock_level   Int
+  reorder_level Int
+  price         Float
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+

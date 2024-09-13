@@ -21,7 +21,6 @@ export class SaleForecastingController {
   ) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard)
   create(@Body() createSaleDto:CreateSaleDto ) {
     return this.saleForecastingService.create(createSaleDto);
   }
@@ -32,13 +31,13 @@ export class SaleForecastingController {
   }
 
   @Get(':id')
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   findOne(@Param('id') id: string) {
     return this.saleForecastingService.findOne(id);
   }
 
   @Put(':id')
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   update(
     @Param('id') id: string,
     @Body() updateSaleDto: UpdateSaleDto,
@@ -47,7 +46,7 @@ export class SaleForecastingController {
   }
 
   @Delete(':id')
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   remove(@Param('id') id: string):Promise<responseFormat> {
     return this.saleForecastingService.remove(id);
   }
