@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import FormDaily from "@/componets/performance-comparision/formDaily";
+import FormDaily from "@/componets/performance-comparision/FormDaily";
 import FormMonthly from "@/componets/performance-comparision/FormMonthly";
 import SalesOverTimeChart from "@/componets/performance-comparision/SalesOverTimeChart";
 
@@ -9,7 +9,7 @@ const SpecialFunctionHomePage = () => {
   const [timeMetric, setTimeMetric] = useState("") //store chosen time metric for form display
 
   return (
-    <div>
+    <div className="w-full h-full ml-[300px] overflow-hidden pl-10 pt-10">
       <h5 className=" text-3xl font-semibold">
         Performance comparision engine
       </h5>
