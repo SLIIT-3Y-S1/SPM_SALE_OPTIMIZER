@@ -7,8 +7,12 @@ import { UpdateSpecialFunctionDto } from './dto/update-special-function.dto';
 export class SpecialFunctionController {
   constructor(private readonly spfService: SpecialFunctionService) {}
 
-  @Get('dates')
+  @Get('daily-dates')
   async getOrderDates() {
     return this.spfService.getOrderDates();
+  }
+  @Get('monthly-dates')
+  async getOrderMonths() {
+    return this.spfService.getOrderMonths();
   }
 }
