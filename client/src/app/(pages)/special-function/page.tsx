@@ -4,10 +4,17 @@ import { useState } from "react";
 import FormDaily from "@/componets/performance-comparision/FormDaily";
 import FormMonthly from "@/componets/performance-comparision/FormMonthly";
 import SalesOverTimeChart from "@/componets/performance-comparision/SalesOverTimeChart";
-import InsightsDisplay from "@/componets/performance-comparision/InsightsDisplay"; 
+import InsightsDisplay from "@/componets/performance-comparision/InsightsDisplay";
 
 const SpecialFunctionHomePage = () => {
-  const [timeMetric, setTimeMetric] = useState("") //store chosen time metric for form display
+  const [timeMetric, setTimeMetric] = useState(""); //store chosen time metric for form display
+
+  const [comparisonData, setComparisonData] = useState(null); // Store comparison data
+
+  // Handler to update state with comparison data
+  const handleComparisonData = (data) => {
+    setComparisonData(data);
+  };
 
   return (
     <div className="h-full ml-[350px] mt-10 mr-5">
@@ -26,30 +33,40 @@ const SpecialFunctionHomePage = () => {
             <option value={"daily"}>Daily</option>
             <option value={"monthly"}>Monthly</option>
           </select>
-        
 
-        {/* Conditionally render form inputs based on timeMetric */}
-        {timeMetric === "daily" && <FormDaily />}
-        {timeMetric === "monthly" && <FormMonthly />}
+          {/* Conditionally render form inputs based on timeMetric */}
+          {timeMetric === "daily" && <FormDaily onComparisonData={handleComparisonData}/>}
+          {timeMetric === "monthly" && <FormMonthly />}
         </div>
-        <div className="flex pt-10">
-          <div className="container flex-col">
-            <h1>Date 1</h1>
-            <SalesOverTimeChart/>
-            <h1>Total income generated</h1>
-            <h1>Average Sales</h1>
+
+        {comparisonData && (
+          <div>
+            <div className="flex pt-10">
+              <div className="container flex-col">
+                <h1>{comparisonData.dateA.date}</h1>
+                <SalesOverTimeChart
+                  chartData={comparisonData.dateA.salesData}
+                  label={comparisonData.dateA.date}
+                />
+                 <h1>Total income generated: {comparisonData.dateA.totalIncome}</h1>
+                 <h1>Average Sales: {comparisonData.dateA.avgSales}</h1>
+              </div>
+              <div className="p-5"></div>
+              <div className="container flex-col">
+                <h2>{comparisonData.dateA.date}</h2>
+                <SalesOverTimeChart
+                 chartData={comparisonData.dateB.salesData}
+                  label={comparisonData.dateA.date}
+                />
+                 <h1>Total income generated: {comparisonData.dateB.totalIncome}</h1>
+                 <h1>Average Sales: {comparisonData.dateB.avgSales}</h1>
+              </div>
+            </div>
+            <div className="mt-5">
+              <InsightsDisplay />
+            </div>
           </div>
-          <div className="p-5"></div>
-          <div className="container flex-col">
-            <h2>Date 2</h2>
-            <SalesOverTimeChart/>
-            <h1>Total income generated</h1>
-            <h1>Average Sales</h1>
-          </div>
-        </div>
-        <div className="mt-5">
-          <InsightsDisplay/>
-        </div>
+        )}
       </div>
     </div>
   );
