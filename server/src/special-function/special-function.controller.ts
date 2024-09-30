@@ -33,14 +33,39 @@ export class SpecialFunctionController {
     // Return the results
     return {
       dateA: {
-        date:dateA,
+        date: dateA,
         salesData: salesDataA.salesByHour,
         totalIncome: salesDataA.totalIncome,
         avgSales: salesDataA.averageSales,
       },
       dateB: {
-        date:dateB,
+        date: dateB,
         salesData: salesDataB.salesByHour,
+        totalIncome: salesDataB.totalIncome,
+        avgSales: salesDataB.averageSales,
+      },
+    };
+  }
+
+  @Post('compare-monthly')
+  async compareMonthlySales(@Body() body: { monthA: string; monthB: string }) {
+    const { monthA, monthB } = body;
+
+    // Get sales data, total income, and average sales for both months
+    const salesDataA = await this.spfService.getSalesByMonth(monthA);
+    const salesDataB = await this.spfService.getSalesByMonth(monthB);
+
+    // Return the results
+    return {
+      dateA: {
+        date: monthA,
+        salesData: salesDataA.salesByDay,
+        totalIncome: salesDataA.totalIncome,
+        avgSales: salesDataA.averageSales,
+      },
+      dateB: {
+        date: monthB,
+        salesData: salesDataB.salesByDay,
         totalIncome: salesDataB.totalIncome,
         avgSales: salesDataB.averageSales,
       },

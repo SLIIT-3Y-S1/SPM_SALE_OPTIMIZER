@@ -36,7 +36,8 @@ const SpecialFunctionHomePage = () => {
 
           {/* Conditionally render form inputs based on timeMetric */}
           {timeMetric === "daily" && <FormDaily onComparisonData={handleComparisonData}/>}
-          {timeMetric === "monthly" && <FormMonthly />}
+          {timeMetric === "monthly" && <FormMonthly onComparisonData={handleComparisonData}/>}
+
         </div>
 
         {comparisonData && (
@@ -47,6 +48,7 @@ const SpecialFunctionHomePage = () => {
                 <SalesOverTimeChart
                   chartData={comparisonData.dateA.salesData}
                   label={comparisonData.dateA.date}
+                  isMonthly={timeMetric === 'monthly'}
                 />
                  <h1>Total income generated: {comparisonData.dateA.totalIncome}</h1>
                  <h1>Average Sales: {comparisonData.dateA.avgSales}</h1>
@@ -57,6 +59,7 @@ const SpecialFunctionHomePage = () => {
                 <SalesOverTimeChart
                  chartData={comparisonData.dateB.salesData}
                   label={comparisonData.dateA.date}
+                  isMonthly={timeMetric === 'monthly'}
                 />
                  <h1>Total income generated: {comparisonData.dateB.totalIncome}</h1>
                  <h1>Average Sales: {comparisonData.dateB.avgSales}</h1>

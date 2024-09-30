@@ -5,9 +5,15 @@ import { CategoryScale, LinearScale, PointElement, LineElement } from 'chart.js'
 
 Chart.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-const SalesOverTimeChart = ({ chartData, label }) => {
+const SalesOverTimeChart = ({ chartData, label, isMonthly }) => {
+
+  // If monthly, map labels to days of the month
+  const labels = isMonthly
+    ? chartData.map((entry) => `Day ${entry.day}`)  // For monthly data, assume "entry.day" is available
+    : chartData.map((entry) => `${entry.hour}:00`); // For daily data, use hours
+
   const data = {
-    labels: chartData.map((entry) => `${entry.hour}:00`), // Display hour labels
+    labels: labels,
     datasets: [
       {
         label: label,

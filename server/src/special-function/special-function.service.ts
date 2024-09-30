@@ -89,4 +89,46 @@ export class SpecialFunctionService {
   }
 
   // Process comparision request monthly
+  async getSalesByMonth(month: string) {
+    const sales = await this.prisma.order.groupBy({
+      by: ['created_at'],
+      _sum: { total_amount: true },
+      where: {
+        created_at: {
+          gte: new Date(`${month}-01T00:00:00.000Z`),
+          lte: new Date(`${month}-31T23:59:59.999Z`), // Handles up to 31 days
+        },
+      },
+      orderBy: { created_at: 'asc' },
+    });
+  
+    // Group sales by day
+    const salesByDay = Array.from({ length: 31 }, (_, i) => ({
+      day: i + 1,
+      income: 0,
+    }));
+  
+    sales.forEach((sale) => {
+      const day = new Date(sale.created_at).getUTCDate();
+      salesByDay[day - 1].income = sale._sum.total_amount;
+    });
+  
+    // Calculate total income and average sales
+    const totalIncomeraw = salesByDay.reduce(
+      (sum, entry) => sum + entry.income,
+      0,
+    );
+    
+    const totalIncome = parseFloat(totalIncomeraw.toFixed(2));
+    const averageSales = parseFloat(
+      mean(salesByDay.map((entry) => entry.income)).toFixed(2),
+    );
+  
+    return {
+      salesByDay,
+      totalIncome,
+      averageSales,
+    };
+  }
+  
 }

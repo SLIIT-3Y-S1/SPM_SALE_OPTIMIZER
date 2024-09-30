@@ -19,8 +19,6 @@ export const fetchAvailableDates = async () => {
 };
 
 
-// comparisionServices.ts
-
 // Fetch available order months (YYYY-MM) from the backend API
 export const fetchAvailableMonths = async () => {
   try {
@@ -61,3 +59,27 @@ export const fetchAvailableMonths = async () => {
       return null;
     }
   };
+
+
+  export const fetchMonthlyComparison = async (monthA: string, monthB: string) => {
+    try {
+      const response = await fetch('http://localhost:5500/api/v1/special-function/compare-monthly', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ monthA, monthB }),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to fetch comparison data');
+      }
+  
+      const data = await response.json();
+      return data; // Handle the comparison data
+    } catch (error) {
+      console.error('Error fetching monthly comparison:', error);
+      return null;
+    }
+  };
+  
