@@ -2,7 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { CreateSpecialFunctionDto } from './dto/create-special-function.dto';
 import { UpdateSpecialFunctionDto } from './dto/update-special-function.dto';
 import { PrismaService } from 'src/database/prisma.service';
-import { mean } from 'mathjs'; // Import necessary functions from Math.js
+import { max, mean, min } from 'mathjs'; // Import necessary functions from Math.js
+import { calcOutliersIQR } from './utility-services';
+import OpenAI from 'openai';
 
 @Injectable()
 export class SpecialFunctionService {
@@ -10,9 +12,9 @@ export class SpecialFunctionService {
 
   async getOrderDates() {
     const dates = await this.prisma.order.groupBy({
-        by: ['created_at'],
-        _count: { created_at: true },
-        orderBy: { created_at: 'asc' },
+      by: ['created_at'],
+      _count: { created_at: true },
+      orderBy: { created_at: 'asc' },
     });
 
     // Use a Set to store unique dates to avoid duplicates
@@ -20,13 +22,13 @@ export class SpecialFunctionService {
 
     // Extract only the date part and store in the Set for uniqueness
     dates.forEach((dateObj) => {
-        const dateString = dateObj.created_at.toISOString().split('T')[0];
-        uniqueDatesSet.add(dateString);
+      const dateString = dateObj.created_at.toISOString().split('T')[0];
+      uniqueDatesSet.add(dateString);
     });
 
     // Convert the Set back to an Array and sort it
     return Array.from(uniqueDatesSet).sort();
-}
+  }
 
   // Method to get distinct order months in 'YYYY-MM' format
   async getOrderMonths() {
@@ -69,22 +71,37 @@ export class SpecialFunctionService {
       salesByHour[hour].income = sale._sum.total_amount;
     });
 
-    // Calculate total income and average sales
-    const totalIncomeraw = salesByHour.reduce(
+    const totalIncomeRaw = salesByHour.reduce(
       (sum, entry) => sum + entry.income,
       0,
-    );
-
-    const totalIncome = parseFloat(totalIncomeraw.toFixed(2))
+    ); // Calculate total income
+    const totalIncome = parseFloat(totalIncomeRaw.toFixed(2)); //Round off total income
 
     const averageSales = parseFloat(
       mean(salesByHour.map((entry) => entry.income)).toFixed(2),
-    );
+    ); //Calculate and round off average sales
+
+    const maxSale = parseFloat(
+      max(salesByHour.map((entry) => entry.income)).toFixed(2),
+    ); //Calculate and Round off max sales
+    const minSale = parseFloat(
+      min(salesByHour.map((entry) => entry.income)).toFixed(2),
+    ); // Calculate and Round off min sales
+
+    const numTransactions = sales.length; // Get number of transactions
+
+    // Detect outliers using IQR method
+    const salesAmounts = salesByHour.map((entry) => entry.income);
+    const outliers = calcOutliersIQR(salesAmounts);
 
     return {
       salesByHour,
       totalIncome,
       averageSales,
+      maxSale,
+      minSale,
+      numTransactions,
+      outliers,
     };
   }
 
@@ -101,34 +118,100 @@ export class SpecialFunctionService {
       },
       orderBy: { created_at: 'asc' },
     });
-  
+
     // Group sales by day
     const salesByDay = Array.from({ length: 31 }, (_, i) => ({
       day: i + 1,
       income: 0,
     }));
-  
+
     sales.forEach((sale) => {
       const day = new Date(sale.created_at).getUTCDate();
       salesByDay[day - 1].income = sale._sum.total_amount;
     });
-  
+
     // Calculate total income and average sales
     const totalIncomeraw = salesByDay.reduce(
       (sum, entry) => sum + entry.income,
       0,
     );
-    
+
     const totalIncome = parseFloat(totalIncomeraw.toFixed(2));
     const averageSales = parseFloat(
       mean(salesByDay.map((entry) => entry.income)).toFixed(2),
     );
-  
+
     return {
       salesByDay,
       totalIncome,
       averageSales,
     };
   }
-  
+
+  async getInsights(
+    timeType: string,
+    currency: string,
+    dateA: string,
+    dateB: string,
+    salesDataA: {
+      salesByHour: { hour: number; income: number }[];
+      totalIncome: number;
+      averageSales: number;
+      maxSale: number;
+      minSale: number;
+      numTransactions: number;
+      outliers: number[];
+    },
+    salesDataB: {
+      salesByHour: { hour: number; income: number }[];
+      totalIncome: number;
+      averageSales: number;
+      maxSale: number;
+      minSale: number;
+      numTransactions: number;
+      outliers: number[];
+    },
+  ) {
+    // Format the outliers as a comma-separated string
+    const formatOutliers = (outliers: number[]) => outliers.join(',');
+
+    // Create the prompt content string for both dateA and dateB
+    const promptContent = `type: ${timeType}, currency: ${currency}
+      Date|Total Sales|No. of transactions|Avg. Sales per type|Max sale|Min Sale|Outliers
+      ${dateA}|${salesDataA.totalIncome}|${salesDataA.numTransactions}|${salesDataA.averageSales}|${salesDataA.maxSale}|${salesDataA.minSale}|${formatOutliers(salesDataA.outliers)}
+      ${dateB}|${salesDataB.totalIncome}|${salesDataB.numTransactions}|${salesDataB.averageSales}|${salesDataB.maxSale}|${salesDataB.minSale}|${formatOutliers(salesDataB.outliers)}`;
+
+    //connection and request
+    const openai = new OpenAI(); 
+    /*
+    const configuration = new Configuration({
+      apiKey: process.env.OPENAI_API_KEY,  // Ensure the API key is set properly
+    });
+
+    const openai = new OpenAIApi(configuration);
+    */
+
+    try {
+      const response = openai.chat.completions.create({
+        model: 'gpt-4o-mini',
+        messages: [
+          {
+            role: 'system',
+            content:
+              'You are the sales performance analyst of a fashion retail store.Using given key data points of 2 timelines,provide performance insights seperately in points and outline abnormailites',
+          },
+          {
+            role: 'user',
+            content: '',
+          },
+        ],
+      });
+      //return insights
+      return response.choices[0].message;
+      console.log(response.choices[0].message);
+    } catch (error) {
+      console.error('Error fetching AI insights:', error);
+      return 'AI service unavailable. Unable to generate insights.';
+    }
+  }
 }

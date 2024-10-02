@@ -25,10 +25,23 @@ export class SpecialFunctionController {
   }
   @Post('compare-daily')
   async compareDailySales(@Body() body: { dateA: string; dateB: string }) {
+    
     const { dateA, dateB } = body;
+    const timeType = "daily"
+    const currency = "LKR"
+
     // Get sales data, total income, and average sales for both dates
     const salesDataA = await this.spfService.getSalesByDate(dateA);
     const salesDataB = await this.spfService.getSalesByDate(dateB);
+   
+    //generate ai insights
+    let openaiGenerate;
+    try{
+      openaiGenerate = await this.spfService.getInsights(timeType, currency, dateA, dateB, salesDataA, salesDataB);
+    } catch(error){
+      openaiGenerate = "An error occurred. Please Check Console."
+      console.log(error);
+    }
 
     // Return the results
     return {
@@ -44,6 +57,9 @@ export class SpecialFunctionController {
         totalIncome: salesDataB.totalIncome,
         avgSales: salesDataB.averageSales,
       },
+      aiInsights:{
+        response:openaiGenerate
+      }
     };
   }
 
