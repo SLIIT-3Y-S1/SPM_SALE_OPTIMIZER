@@ -1,0 +1,167 @@
+.inventoryContainer {
+  padding: 20px;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+}
+
+.h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 2rem;
+  color: #333;
+}
+
+.inventoryTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 auto;
+  background-color: #f8f8f8;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.inventoryTable th,
+.inventoryTable td {
+  padding: 12px 15px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.inventoryTable td .priceRow{
+  text-align: right;
+}
+
+.inventoryTable th {
+  background-color: #467ed7;
+  color: white;
+  font-weight: bold;
+}
+
+.inventoryTable tr {
+  border-bottom: 1px solid #ddd;
+}
+
+.inventoryTable tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.inventoryTable tr:hover {
+  background-color: #ddd;
+}
+
+.inventoryTable td {
+  color: #333;
+}
+
+.button {
+  background-color: #1828d8a4; 
+  color: white;             
+  padding: 5px;
+  margin: 5px;      
+  font-size: 16px;          
+  border: none;             
+  border-radius: 8px;        
+  cursor: pointer;           
+  transition: background-color 0.3s ease; 
+  width: 100px;
+}
+
+.buttonAdd {
+  background-color: #060181e8; 
+  color: white;             
+  padding: 0px;
+  margin: 5px;      
+  font-size: 16px;          
+  border: none;             
+  border-radius: 8px;        
+  cursor: pointer;           
+  transition: background-color 0.3s ease; 
+  width: 200px;
+  height: 50px;
+}
+
+.button:hover {
+  background-color: #2980b9; 
+}
+
+.buttonAdd:hover {
+  background-color: #1c15d4e2; 
+}
+
+.button:active {
+  background-color: #2471a3; 
+}
+
+.button:disabled {
+  background-color: #bdc3c7; 
+  cursor: not-allowed;       
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 80%;
+  max-width: 500px;
+}
+
+.modalContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.modalContent h2 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.modalContent form label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.modalContent form input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: space-between;
+}
+
+.modalActions .button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #4CAF50;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.modalActions .button:hover {
+  background-color: #45a049;
+}
+
+.modalActions .button:nth-child(2) {
+  background-color: #f44336;
+}
+
+.modalActions .button:nth-child(2):hover {
+  background-color: #e53935;
+}

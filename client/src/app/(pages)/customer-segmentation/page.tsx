@@ -1,7 +1,10 @@
 
 const CustomerHomePage = () => {
   return (
-    <div>CustomerHomePage</div>
+    <div className=''>
+      Customer Home Page
+       {/*your other components*/}
+    </div>
   )
 }
 

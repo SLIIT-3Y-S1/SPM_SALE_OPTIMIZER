@@ -1,0 +1,51 @@
+.h1 {
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.button {
+    background-color: #1828d8a4; 
+    color: white;             
+    padding: 12px;
+    margin: 15px;      
+    font-size: 16px;          
+    border: none;             
+    border-radius: 8px;        
+    cursor: pointer;           
+    transition: background-color 0.3s ease; 
+    width: fit-content;
+    max-width: 250px;
+  }
+  
+  .button:hover {
+    background-color: #2980b9; /* Darker blue on hover */
+  }
+  
+  .button:active {
+    background-color: #2471a3; /* Even darker blue on click */
+  }
+  
+  .button:disabled {
+    background-color: #bdc3c7; /* Disabled grey color */
+    cursor: not-allowed;       /* Disabled cursor */
+  }
+
+  .column {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .dashboard {
+    display: flex;
+    justify-content: center;
+    align-items: center;   
+  }
+
+  .dashboardContent {
+    width: 800px;
+    height: 200px;
+    margin: 15px;  
+    background: lightgray;
+  }
+  
