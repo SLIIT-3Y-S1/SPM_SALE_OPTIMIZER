@@ -2,7 +2,7 @@ import React from 'react'
 
 const Header = () => {
   return (
-    <div>Header</div>
+    <header className=' p-5 border-b-2'> Welcome user ! </header>
   )
 }
 
