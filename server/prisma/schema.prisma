@@ -3,18 +3,19 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "mysql" 
   url      = env("DATABASE_URL")
 }
 
-model User {
-  user_id       String   @id @default(uuid())
-  username      String   @unique
-  email         String   @unique
+model User{
+  user_id String @id @default(uuid())
+  username String @unique
+  email String @unique
   hash_password String
-  is_verified   String
-  created_at    DateTime @default(now())
-  updated_at    DateTime @updatedAt
+  hash_refresh_token  String?
+  is_verified String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
 model Customer {
@@ -27,8 +28,10 @@ model Customer {
   updated_at   DateTime @updatedAt
 
   // Relationships
-  orders Order[]
+  orders       Order[]
 }
+
+
 
 model Order {
   order_id     String   @id @default(uuid())
@@ -39,21 +42,21 @@ model Order {
   updated_at   DateTime @updatedAt
 
   // Relationships
-  customer Customer  @relation(fields: [customer_id], references: [customer_id])
-  payments Payment[]
-  sales    Sale[]
+  customer     Customer @relation(fields: [customer_id], references: [customer_id])
+  payments     Payment[]
+  sales        Sale[]
 }
 
 model Payment {
-  payment_id     String   @id @default(uuid())
-  order_id       String
-  payment_method String // enum with 'cash' or 'card'
-  payment_status String // enum with 'pending' or 'complete'
-  amount_paid    Float
-  payment_date   DateTime @default(now())
+  payment_id    String   @id @default(uuid())
+  order_id      String
+  payment_method String  // enum with 'cash' or 'card'
+  payment_status String  // enum with 'pending' or 'complete'
+  amount_paid   Float
+  payment_date  DateTime @default(now())
 
   // Relationships
-  order Order @relation(fields: [order_id], references: [order_id])
+  order         Order    @relation(fields: [order_id], references: [order_id])
 }
 
 model Product {
@@ -65,63 +68,63 @@ model Product {
   updated_at   DateTime @updatedAt
 
   // Relationships
-  price_inventory        PriceInventory[]
-  product_variants       ProductVariant[]
-  sales                  Sale[]
+  price_inventory  PriceInventory[]
+  product_variants ProductVariant[]
+  sales            Sale[]
   inventory_transactions InventoryTransaction[]
 }
 
 model ProductVariant {
-  variant_id String   @id @default(uuid())
-  product_id String
-  size       String?
-  color      String?
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  variant_id  String   @id @default(uuid())
+  product_id  String
+  size        String?
+  color       String?
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
 
   // Relationships
-  product                Product                @relation(fields: [product_id], references: [product_id])
-  sales                  Sale[]
+  product     Product  @relation(fields: [product_id], references: [product_id])
+  sales       Sale[]
   inventory_transactions InventoryTransaction[]
 }
 
 model PriceInventory {
-  id             String   @id @default(uuid())
-  product_id     String
-  price          Float
+  id            String   @id @default(uuid())
+  product_id    String
+  price         Float
   stock_quantity Int
-  created_at     DateTime @default(now())
-  updated_at     DateTime @updatedAt
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
 
   // Relationships
-  product Product @relation(fields: [product_id], references: [product_id])
+  product      Product   @relation(fields: [product_id], references: [product_id])
 }
 
 model InventoryTransaction {
-  transaction_id   String   @id @default(uuid())
-  product_id       String
-  variant_id       String?
-  quantity_change  Int
-  transaction_type String // enum can be sale, restock
+  transaction_id  String   @id @default(uuid())
+  product_id      String
+  variant_id      String?
+  quantity_change Int
+  transaction_type String  // enum can be sale, restock
   transaction_date DateTime @default(now())
 
   // Relationships
-  product         Product         @relation(fields: [product_id], references: [product_id])
+  product         Product  @relation(fields: [product_id], references: [product_id])
   product_variant ProductVariant? @relation(fields: [variant_id], references: [variant_id])
 }
 
 model Sale {
-  sale_id       String   @id @default(uuid())
-  order_id      String
-  product_id    String
-  variant_id    String?
+  sale_id     String   @id @default(uuid())
+  order_id    String
+  product_id  String
+  variant_id  String?
   quantity_sold Int
-  total_price   Float
-  created_at    DateTime @default(now())
+  total_price  Float
+  created_at   DateTime @default(now())
 
   // Relationships
-  order           Order           @relation(fields: [order_id], references: [order_id])
-  product         Product         @relation(fields: [product_id], references: [product_id])
+  order       Order   @relation(fields: [order_id], references: [order_id])
+  product     Product @relation(fields: [product_id], references: [product_id])
   product_variant ProductVariant? @relation(fields: [variant_id], references: [variant_id])
 }
 
