@@ -128,7 +128,6 @@ model Sale {
   product_variant ProductVariant? @relation(fields: [variant_id], references: [variant_id])
 }
 
-
 model Inventory {
   id            Int      @id @default(autoincrement())
   product_name  String
@@ -139,4 +138,3 @@ model Inventory {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }
-
