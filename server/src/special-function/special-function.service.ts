@@ -182,36 +182,33 @@ export class SpecialFunctionService {
       ${dateB}|${salesDataB.totalIncome}|${salesDataB.numTransactions}|${salesDataB.averageSales}|${salesDataB.maxSale}|${salesDataB.minSale}|${formatOutliers(salesDataB.outliers)}`;
 
     //connection and request
-    const openai = new OpenAI(); 
-    /*
-    const configuration = new Configuration({
-      apiKey: process.env.OPENAI_API_KEY,  // Ensure the API key is set properly
+
+    const openai = new OpenAI({
+      apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
+      organization: 'org-zs4xBWxG2hnGxUyEgo8e2Rp2',
+      project: 'proj_6NgAgMSDbfmr1M5fDRTeZ0PU',
     });
 
-    const openai = new OpenAIApi(configuration);
-    */
-
     try {
-      const response = openai.chat.completions.create({
+      const response = await openai.chat.completions.create({
         model: 'gpt-4o-mini',
         messages: [
           {
             role: 'system',
             content:
-              'You are the sales performance analyst of a fashion retail store.Using given key data points of 2 timelines,provide performance insights seperately in points and outline abnormailites',
+              'You are the sales performance analyst of a fashion retail store.Using given key data points of 2 timelines,provide performance insights seperately pointwise and outline abnormailites.Use html formatting. Dont use body,html tags',
           },
           {
             role: 'user',
-            content: '',
+            content: promptContent,
           },
         ],
       });
       //return insights
-      return response.choices[0].message;
       console.log(response.choices[0].message);
+      return response.choices[0].message;
     } catch (error) {
       console.error('Error fetching AI insights:', error);
-      return 'AI service unavailable. Unable to generate insights.';
     }
   }
 }
