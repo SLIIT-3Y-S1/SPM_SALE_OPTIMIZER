@@ -5,6 +5,7 @@ function InsightsDisplay({ generatedInsights }) {
   const typingSpeed = 50; // Speed of typing in milliseconds
 
   useEffect(() => {
+    if (!generatedInsights) return "An Error Occured While Generating Insights. Please Contact an admin."; 
     let currentIndex = 0;
     const tagRegex = /(<[^>]+>|[^<]+)/g; // Split content by HTML tags
     const parts = generatedInsights.match(tagRegex); // Split HTML and text parts
