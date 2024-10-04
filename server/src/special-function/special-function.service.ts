@@ -47,6 +47,7 @@ export class SpecialFunctionService {
     return months;
   }
 
+  //sales comparision function : daily type
   async getSalesByDate(date: string) {
     const sales = await this.prisma.order.groupBy({
       by: ['created_at'],
@@ -141,36 +142,37 @@ export class SpecialFunctionService {
       mean(salesByDay.map((entry) => entry.income)).toFixed(2),
     );
 
+    const maxSale = parseFloat(
+      max(salesByDay.map((entry) => entry.income)).toFixed(2),
+    );
+    const minSale = parseFloat(
+      min(salesByDay.map((entry) => entry.income)).toFixed(2),
+    );
+    const numTransactions = sales.length;
+
+    // Detect outliers using IQR method (reused from daily)
+    const salesAmounts = salesByDay.map((entry) => entry.income);
+    const outliers = calcOutliersIQR(salesAmounts);
+
     return {
-      salesByDay,
+      salesByDay, // Similar to salesByHour in daily
       totalIncome,
       averageSales,
+      maxSale,
+      minSale,
+      numTransactions,
+      outliers,
     };
   }
 
+  //AI insights generation function
   async getInsights(
     timeType: string,
     currency: string,
     dateA: string,
     dateB: string,
-    salesDataA: {
-      salesByHour: { hour: number; income: number }[];
-      totalIncome: number;
-      averageSales: number;
-      maxSale: number;
-      minSale: number;
-      numTransactions: number;
-      outliers: number[];
-    },
-    salesDataB: {
-      salesByHour: { hour: number; income: number }[];
-      totalIncome: number;
-      averageSales: number;
-      maxSale: number;
-      minSale: number;
-      numTransactions: number;
-      outliers: number[];
-    },
+    salesDataA: any,
+    salesDataB: any,
   ) {
     // Format the outliers as a comma-separated string
     const formatOutliers = (outliers: number[]) => outliers.join(',');
