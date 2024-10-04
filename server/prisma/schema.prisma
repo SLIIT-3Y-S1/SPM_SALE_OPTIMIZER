@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql" 
+  provider = "sqlserver" 
   url      = env("DATABASE_URL")
 }
 
@@ -109,7 +109,7 @@ model InventoryTransaction {
   transaction_date DateTime @default(now())
 
   // Relationships
-  product         Product  @relation(fields: [product_id], references: [product_id])
+  product         Product  @relation(fields: [product_id], references: [product_id], onUpdate: NoAction, onDelete: NoAction)
   product_variant ProductVariant? @relation(fields: [variant_id], references: [variant_id])
 }
 
@@ -124,7 +124,7 @@ model Sale {
 
   // Relationships
   order       Order   @relation(fields: [order_id], references: [order_id])
-  product     Product @relation(fields: [product_id], references: [product_id])
+  product     Product @relation(fields: [product_id], references: [product_id], onUpdate: NoAction, onDelete: NoAction)
   product_variant ProductVariant? @relation(fields: [variant_id], references: [variant_id])
 }
 

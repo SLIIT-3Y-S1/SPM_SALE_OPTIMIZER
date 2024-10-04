@@ -207,8 +207,8 @@ export class SpecialFunctionService {
         ],
       });
       //return insights
-      return response.choices[0].message;
-      console.log(response.choices[0].message);
+      return (await response).choices[0].message;
+      // console.log(response.choices[0].message);
     } catch (error) {
       console.error('Error fetching AI insights:', error);
       return 'AI service unavailable. Unable to generate insights.';
