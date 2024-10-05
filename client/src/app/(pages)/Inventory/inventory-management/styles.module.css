@@ -1,5 +1,8 @@
 .inventoryContainer {
-  padding: 20px;
+  /* padding: 20px; */
+  margin-top: 20px;
+  margin-right: 20px;
+  margin-left: 350px;
 }
 
 .top {
@@ -98,7 +101,7 @@
 
 .button:disabled {
   background-color: #bdc3c7; 
-  cursor: not-allowed;       
+  cursor: not-allowed;  
 }
 
 .modal {
@@ -113,6 +116,8 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 80%;
   max-width: 500px;
+  max-height: 100vh; /* Set maximum height */
+  overflow-y: auto; /* Enable vertical scrolling */
 }
 
 .modalContent {
@@ -123,6 +128,8 @@
 .modalContent h2 {
   margin-bottom: 20px;
   text-align: center;
+  font-size: 15px;
+  font-weight: bold;
 }
 
 .modalContent form label {

@@ -48,4 +48,10 @@ export class InventoryService {
       }
     })
   }
+
+  async createMany(createInventoryDto: Prisma.InventoryCreateManyInput[]) {
+    return this.databaseService.inventory.createMany({
+      data: createInventoryDto,
+    });
+  }
 }

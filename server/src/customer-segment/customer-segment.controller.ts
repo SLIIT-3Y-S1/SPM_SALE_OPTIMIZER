@@ -19,16 +19,16 @@ export class CustomerSegmentController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.customerSegmentService.findOne(+id);
+    return this.customerSegmentService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCustomerSegmentDto: UpdateCustomerSegmentDto) {
-    return this.customerSegmentService.update(+id, updateCustomerSegmentDto);
+    return this.customerSegmentService.update(id, updateCustomerSegmentDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.customerSegmentService.remove(+id);
+    return this.customerSegmentService.remove(id);
   }
 }
