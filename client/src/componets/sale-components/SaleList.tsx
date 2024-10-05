@@ -42,7 +42,7 @@ export const SaleList = ({ sales , onUpdateSuccess}: SaleListProps) => {
     }
 
   return (
-    <section className="bg-white py-2  w-[84%] overflow-hidden">
+    <section className="bg-white py-2  w-[94%] overflow-hidden">
       <div className="container">
         <div className="flex flex-wrap">
           <div className="w-full ">

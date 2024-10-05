@@ -36,6 +36,26 @@ const UpdateSalePopup: React.FC<UpdateSaleProps> = ({ onClose, sale, onUpdateSuc
         total_price: parseFloat(totalPrice),
         variant_id: null,
       };
+      if (saleData.quantity_sold === 0 || saleData.total_price === 0) {
+        console.error('Quantity Sold and Total Price must be greater than 0');
+        alert('Quantity Sold and Total Price must be greater than 0');
+        setLoading(false);
+        return;
+      }
+      if (isNaN(saleData.quantity_sold) || isNaN(saleData.total_price)) {
+        console.error('Quantity Sold and Total Price must be numbers');
+        alert('Quantity Sold and Total Price must be numbers');
+        setLoading(false);
+        return;
+      }
+      if (saleData.quantity_sold < 0 || saleData.total_price < 0) {
+        console.error('Quantity Sold and Total Price must be greater than 0');
+        alert('Quantity Sold and Total Price must be greater than 0');
+        setLoading(false);
+        return;
+      }
+      
+
       try {
         const result = await updateSale(saleData);
         if (result) {

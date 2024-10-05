@@ -21,6 +21,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/(pages)/Inventory/inventory-management"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/(pages)/Inventory/inventory-management", "src/app/(pages)/special-function/page.jsx"],
   "exclude": ["node_modules"]
 }

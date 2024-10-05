@@ -26,7 +26,7 @@ export const SearchBar = ({ onSearch }: SearchBarProps) => {
   return (
     <div>
       <div className="flex items-center justify-start">
-        <div className="flex rounded-full bg-[#0d1829] px-2 w-[73%]">
+        <div className="flex rounded-full bg-[#0d1829] px-2 w-[94%]">
           <button className="self-center flex p-1 cursor-pointer bg-[#0d1829]">
             <svg
               width="30px"

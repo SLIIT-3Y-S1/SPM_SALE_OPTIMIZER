@@ -32,7 +32,7 @@ export interface Sale {
     }
   };
   
-  export const saveSale = async (saleData: Omit<Sale, 'sale_id' |'variant_id' |'created_at' | 'updated_at'>): Promise<Sale | null> => {
+  export const saveSale = async (saleData: Omit<Sale, 'sale_id' |'variant_id' |'created_at' | 'updated_at'>): Promise<Sale | null|string> => {
     console.log(saleData)
     try {
       const response = await fetch('http://localhost:5500/api/v1/sale', {
@@ -43,7 +43,10 @@ export interface Sale {
         },
         body: JSON.stringify(saleData), // Send the sale data as JSON
       });
-  
+      
+      if(response.status === 500){
+        return "orderID or productID does not exist"
+      }
       if (!response.ok) {
         throw new Error('Failed to save sale data');
       }

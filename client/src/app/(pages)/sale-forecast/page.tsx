@@ -44,14 +44,14 @@ const SaleForecastHomePage = () => {
    
   }
   return (
-    <div className="w-full h-full ml-[300px] overflow-hidden pl-10 pt-10">
+    <div className="w-auto h-full ml-[300px] overflow-hidden pl-10 pt-10">
       <SearchBar onSearch={(searchValue) => handleSearch(searchValue)} />
 
-      <div className="dev flex">
-      <div className="add-btn mt-10 mr-[47%]">
+      <div className="dev flex my-5">
+      <div className="add-btn mr-10">
         <AddBtn onSaveSuccess={handleSaveSuccess} />
       </div>
-      <div className="report-btn mt-10">
+      <div className="report-btn">
         <GenerateSaleReport />
       </div>
       </div>
@@ -65,11 +65,11 @@ const SaleForecastHomePage = () => {
         <>
         <SaleList sales={sales} onUpdateSuccess={handleUpdateSuccess} />
         <div className="container-chart flex mt-10">
-        <div className="w-[45%] h-10">
+        <div className="w-[65%] h-10">
         <SalesChart salesData={sales} />
         
         </div>
-        .<div className="w-[25%] ">
+        .<div className="w-[28%] ">
         <IncomesCharts salesData={sales} />
         </div>
         </div>
