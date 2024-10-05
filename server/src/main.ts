@@ -6,7 +6,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api/v1')
   app.enableCors({
-    origin: 'http://localhost:3000', // Allow requests from your frontend domain
+    origin: true, // Allow requests from your frontend domain
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true, // If you are handling cookies or authentication
   })
