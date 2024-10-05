@@ -1,7 +1,7 @@
 'use client';
 
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import UpdateSalePopup from './UpdateSalePopup';
 import { deleteSale, Sale } from '@/lib/services/saleServices';
 
@@ -15,6 +15,8 @@ interface SaleListProps {
 export const SaleList = ({ sales , onUpdateSuccess}: SaleListProps) => {
   const [showPopup, setShowPopup] = useState(false);
   const [sale, setSale] = useState<Sale | null>(null); 
+
+ 
 
   const togglePopup = () => {
     setShowPopup(!showPopup);
@@ -57,7 +59,8 @@ export const SaleList = ({ sales , onUpdateSuccess}: SaleListProps) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {sales.map((sale, index) => (
+                  {
+                  sales.map((sale, index) => (
                     <tr key={sale.sale_id}>
                       <td className="text-center text-dark font-medium text-base py-5 px-2 bg-[#F3F6FF] border-b border-l border-[#E8E8E8]">{index + 1}</td>
                       <td className="text-center text-dark font-medium text-base py-5 px-2 bg-white border-b border-[#E8E8E8]">{sale.product_id}</td>

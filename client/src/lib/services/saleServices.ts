@@ -100,4 +100,30 @@ export interface Sale {
       console.error('Error deleting sale:', error);
       return false; // Return false in case of error
     }
+
   }
+    // get sale by orderId
+    export const searchByOrderID = async (order_id: string): Promise<Sale[] | null> => {
+      try {
+        const response = await fetch(`http://localhost:5500/api/v1/sale/search-by-orderID/${order_id}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            // Add any additional headers if needed (e.g., authorization)
+          },
+        });
+    
+        if (!response.ok) {
+          throw new Error('Failed to fetch sale data');
+        }
+    
+        const data = await response.json();
+        // console.log(data, "data")
+        return data.data; // Assuming your API returns data under `data`
+
+      } catch (error) {
+        console.error('Error fetching sale:', error);
+        return null;
+      }
+    }
+  
