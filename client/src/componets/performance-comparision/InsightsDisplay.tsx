@@ -5,6 +5,10 @@ function InsightsDisplay({ generatedInsights }) {
   const typingSpeed = 50; // Speed of typing in milliseconds
 
   useEffect(() => {
+    if (!generatedInsights) 
+      {
+        generatedInsights = "<div>An Error Occured While Generating Content, Please Contact An Admin</div>"
+      } 
     let currentIndex = 0;
     let currentHTML = ""; // Local state to build the HTML without duplication
 
