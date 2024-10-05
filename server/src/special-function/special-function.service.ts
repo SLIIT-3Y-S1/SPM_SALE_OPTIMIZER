@@ -47,6 +47,7 @@ export class SpecialFunctionService {
     return months;
   }
 
+  //sales comparision function : daily type
   async getSalesByDate(date: string) {
     const sales = await this.prisma.order.groupBy({
       by: ['created_at'],
@@ -141,36 +142,37 @@ export class SpecialFunctionService {
       mean(salesByDay.map((entry) => entry.income)).toFixed(2),
     );
 
+    const maxSale = parseFloat(
+      max(salesByDay.map((entry) => entry.income)).toFixed(2),
+    );
+    const minSale = parseFloat(
+      min(salesByDay.map((entry) => entry.income)).toFixed(2),
+    );
+    const numTransactions = sales.length;
+
+    // Detect outliers using IQR method (reused from daily)
+    const salesAmounts = salesByDay.map((entry) => entry.income);
+    const outliers = calcOutliersIQR(salesAmounts);
+
     return {
-      salesByDay,
+      salesByDay, // Similar to salesByHour in daily
       totalIncome,
       averageSales,
+      maxSale,
+      minSale,
+      numTransactions,
+      outliers,
     };
   }
 
+  //AI insights generation function
   async getInsights(
     timeType: string,
     currency: string,
     dateA: string,
     dateB: string,
-    salesDataA: {
-      salesByHour: { hour: number; income: number }[];
-      totalIncome: number;
-      averageSales: number;
-      maxSale: number;
-      minSale: number;
-      numTransactions: number;
-      outliers: number[];
-    },
-    salesDataB: {
-      salesByHour: { hour: number; income: number }[];
-      totalIncome: number;
-      averageSales: number;
-      maxSale: number;
-      minSale: number;
-      numTransactions: number;
-      outliers: number[];
-    },
+    salesDataA: any,
+    salesDataB: any,
   ) {
     // Format the outliers as a comma-separated string
     const formatOutliers = (outliers: number[]) => outliers.join(',');
@@ -182,36 +184,41 @@ export class SpecialFunctionService {
       ${dateB}|${salesDataB.totalIncome}|${salesDataB.numTransactions}|${salesDataB.averageSales}|${salesDataB.maxSale}|${salesDataB.minSale}|${formatOutliers(salesDataB.outliers)}`;
 
     //connection and request
-    const openai = new OpenAI(); 
-    /*
-    const configuration = new Configuration({
-      apiKey: process.env.OPENAI_API_KEY,  // Ensure the API key is set properly
+
+    const openai = new OpenAI({
+      apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
+      organization: 'org-zs4xBWxG2hnGxUyEgo8e2Rp2',
+      project: 'proj_6NgAgMSDbfmr1M5fDRTeZ0PU',
     });
 
-    const openai = new OpenAIApi(configuration);
-    */
-
     try {
-      const response = openai.chat.completions.create({
+      const response = await openai.chat.completions.create({
         model: 'gpt-4o-mini',
         messages: [
           {
             role: 'system',
             content:
-              'You are the sales performance analyst of a fashion retail store.Using given key data points of 2 timelines,provide performance insights seperately in points and outline abnormailites',
+              'You are the sales performance analyst of a fashion retail store.Using given key data points of 2 timelines,provide performance insights seperately pointwise and outline abnormailites.Use tailwindcss formatting.Dont use body,html tags',
           },
           {
             role: 'user',
-            content: '',
+            content: promptContent,
           },
         ],
+        temperature: 1,
+        max_tokens: 1000,
+        top_p: 1,
+        frequency_penalty: 0,
+        presence_penalty: 0,
+        response_format: {
+          type: 'text',
+        },
       });
       //return insights
-      return (await response).choices[0].message;
-      // console.log(response.choices[0].message);
+      //console.log(response.choices[0].message);
+      return response.choices[0].message;
     } catch (error) {
-      console.error('Error fetching AI insights:', error);
-      return 'AI service unavailable. Unable to generate insights.';
+      console.error('Error fetching AI insights at Service Level', error);
     }
   }
 }

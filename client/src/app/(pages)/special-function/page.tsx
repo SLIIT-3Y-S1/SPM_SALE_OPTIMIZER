@@ -35,9 +35,12 @@ const SpecialFunctionHomePage = () => {
           </select>
 
           {/* Conditionally render form inputs based on timeMetric */}
-          {timeMetric === "daily" && <FormDaily onComparisonData={handleComparisonData}/>}
-          {timeMetric === "monthly" && <FormMonthly onComparisonData={handleComparisonData}/>}
-
+          {timeMetric === "daily" && (
+            <FormDaily onComparisonData={handleComparisonData} />
+          )}
+          {timeMetric === "monthly" && (
+            <FormMonthly onComparisonData={handleComparisonData} />
+          )}
         </div>
 
         {comparisonData && (
@@ -48,25 +51,31 @@ const SpecialFunctionHomePage = () => {
                 <SalesOverTimeChart
                   chartData={comparisonData.dateA.salesData}
                   label={comparisonData.dateA.date}
-                  isMonthly={timeMetric === 'monthly'}
+                  isMonthly={timeMetric === "monthly"}
                 />
-                 <h1>Total income generated: {comparisonData.dateA.totalIncome}</h1>
-                 <h1>Average Sales: {comparisonData.dateA.avgSales}</h1>
+                <h1>
+                  Total income generated: {comparisonData.dateA.totalIncome}
+                </h1>
+                <h1>Average Sales: {comparisonData.dateA.avgSales}</h1>
               </div>
               <div className="p-5"></div>
               <div className="container flex-col">
                 <h2>{comparisonData.dateA.date}</h2>
                 <SalesOverTimeChart
-                 chartData={comparisonData.dateB.salesData}
+                  chartData={comparisonData.dateB.salesData}
                   label={comparisonData.dateA.date}
-                  isMonthly={timeMetric === 'monthly'}
+                  isMonthly={timeMetric === "monthly"}
                 />
-                 <h1>Total income generated: {comparisonData.dateB.totalIncome}</h1>
-                 <h1>Average Sales: {comparisonData.dateB.avgSales}</h1>
+                <h1>
+                  Total income generated: {comparisonData.dateB.totalIncome}
+                </h1>
+                <h1>Average Sales: {comparisonData.dateB.avgSales}</h1>
               </div>
             </div>
             <div className="mt-5">
-              <InsightsDisplay />
+              <InsightsDisplay
+                generatedInsights={comparisonData.aiInsights.response}
+              />
             </div>
           </div>
         )}
