@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseInterceptors, UploadedFile, Res } from '@nestjs/common';
 import { InventoryService } from './inventory.service';
 // import { CreateInventoryDto } from './dto/create-inventory.dto';
 // import { UpdateInventoryDto } from './dto/update-inventory.dto';
@@ -6,6 +6,7 @@ import { Prisma } from '@prisma/client';
 import { Express } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import * as xlsx from 'xlsx'; 
+import { Response } from 'express';
 
 @Controller('inventory')
 export class InventoryController {
@@ -60,6 +61,27 @@ export class InventoryController {
   @Post('bulk')
   createMany(@Body() createInventoryDto: Prisma.InventoryCreateManyInput[]) {
     return this.inventoryService.createMany(createInventoryDto);
+  }
+  
+  @Get('report')
+  async getReport(@Res() res: Response) {
+    try {
+      const fileBuffer = await this.inventoryService.generateReport();
+
+      // Set response headers for file download
+      res.setHeader('Content-Disposition', 'attachment; filename=inventory_report.csv');
+      res.setHeader('Content-Type', 'text/csv');
+
+      // Send the CSV file buffer as the response
+      res.send(fileBuffer);
+    } catch (error) {
+      console.error('Error generating report:', error); // Log detailed error
+      res.status(500).send({
+        statusCode: 500,
+        message: 'Internal server error',
+        error: error.message,
+      });
+    }
   }
 
 }
