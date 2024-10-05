@@ -42,9 +42,9 @@ export class SpecialFunctionController {
         salesDataA,
         salesDataB,
       );
-      console.log('this is the controller' + openaiGenerate.content);
+      //console.log(openaiGenerate.content);
     } catch (error) {
-      openaiGenerate = 'An error occurred. Please Check Console.';
+      console.log(openaiGenerate.content);
       console.log(error);
     }
 
@@ -88,9 +88,9 @@ export class SpecialFunctionController {
         salesDataA,
         salesDataB,
       );
-      console.log('this is the controller' + openaiGenerate.content);
+      //console.log('this is the controller' + openaiGenerate.content);
     } catch (error) {
-      openaiGenerate = 'An error occurred. Please Check Console.';
+      console.log(openaiGenerate.content);
       console.log(error);
     }
 

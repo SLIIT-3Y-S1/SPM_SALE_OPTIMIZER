@@ -6,19 +6,30 @@ function InsightsDisplay({ generatedInsights }) {
 
   useEffect(() => {
     let currentIndex = 0;
-    const tagRegex = /(<[^>]+>|[^<]+)/g; // Split content by HTML tags
-    const parts = generatedInsights.match(tagRegex); // Split HTML and text parts
+    let currentHTML = ""; // Local state to build the HTML without duplication
+
+    const tagRegex = /(<[^>]+>|[^<]+)/g; // Split content by HTML tags and text
+    const parts = generatedInsights.match(tagRegex) || []; // Split into parts
 
     const typeCharacter = () => {
       if (currentIndex < parts.length) {
-        setDisplayedHTML((prev) => prev + parts[currentIndex]); // Append the next part (tag or text)
+        currentHTML += parts[currentIndex]; // Add the next part to the local HTML string
+        setDisplayedHTML(currentHTML); // Update state with the latest HTML
         currentIndex++;
-        setTimeout(typeCharacter, typingSpeed); // Continue typing
+        setTimeout(typeCharacter, typingSpeed); // Continue typing effect
       }
     };
 
-    setDisplayedHTML(""); // Clear the displayed content on new input
+    // Clear displayed content and reset variables
+    setDisplayedHTML("");
+    currentHTML = "";
+    currentIndex = 0;
+
     typeCharacter(); // Start typing animation when component mounts
+
+    return () => {
+      setDisplayedHTML(""); // Clean up on unmount or input change
+    };
   }, [generatedInsights]);
 
   return (

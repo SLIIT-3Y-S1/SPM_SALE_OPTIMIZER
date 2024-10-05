@@ -198,19 +198,27 @@ export class SpecialFunctionService {
           {
             role: 'system',
             content:
-              'You are the sales performance analyst of a fashion retail store.Using given key data points of 2 timelines,provide performance insights seperately pointwise and outline abnormailites.Use html formatting. Dont use body,html tags',
+              'You are the sales performance analyst of a fashion retail store.Using given key data points of 2 timelines,provide performance insights seperately pointwise and outline abnormailites.Use tailwindcss formatting.Dont use body,html tags',
           },
           {
             role: 'user',
             content: promptContent,
           },
         ],
+        temperature: 1,
+        max_tokens: 1000,
+        top_p: 1,
+        frequency_penalty: 0,
+        presence_penalty: 0,
+        response_format: {
+          type: 'text',
+        },
       });
       //return insights
-      console.log(response.choices[0].message);
+      //console.log(response.choices[0].message);
       return response.choices[0].message;
     } catch (error) {
-      console.error('Error fetching AI insights:', error);
+      console.error('Error fetching AI insights at Service Level', error);
     }
   }
 }
