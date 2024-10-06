@@ -118,11 +118,7 @@ const InventoryManagement = () => {
 
   const handleCreate = async () => {
     // check here if created items fields are empty
-    if (!createdItem || !createdItem.product_name || !createdItem.category || createdItem.stock_level === undefined || createdItem.reorder_level === undefined || createdItem.price === undefined) {
-      alert('All fields must be filled out');
-      return;
-    }
-
+    
     try {
       if (fileUploaded) {
         // console.log(fileUploaded);
@@ -137,6 +133,22 @@ const InventoryManagement = () => {
         });
 
       } else {
+        if (!createdItem || !createdItem.product_name || !createdItem.category || createdItem.stock_level === undefined || createdItem.reorder_level === undefined || createdItem.price === undefined) {
+          alert('All fields must be filled out');
+          return;
+        }
+
+        if (createdItem.stock_level < 0 || createdItem.stock_level > 100) {
+          alert('Stock level must be between 0 and 100');
+          return;
+        }
+
+        if (createdItem.reorder_level < 0 || createdItem.reorder_level > 100) {
+          alert('Reorder level must be between 0 and 100');
+          return;
+        }
+        
+    
         console.log(createdItem);
         
         const response = await axios.post(`http://localhost:5500/api/v1/inventory`, createdItem, {
