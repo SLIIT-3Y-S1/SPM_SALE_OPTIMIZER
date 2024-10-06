@@ -50,6 +50,12 @@ const InventoryManagement = () => {
   };
 
   const handleUpdate = async () => {
+    
+    if (!editingItem.product_name || !editingItem.category || editingItem.stock_level === undefined || editingItem.reorder_level === undefined || editingItem.price === undefined) {
+      alert('All fields must be filled out');
+      return;
+    }
+    
     try {
       if (!editingItem || !editingItem.id) {
         console.error('No item to edit or item ID is missing');
@@ -111,6 +117,12 @@ const InventoryManagement = () => {
   };
 
   const handleCreate = async () => {
+    // check here if created items fields are empty
+    if (!createdItem || !createdItem.product_name || !createdItem.category || createdItem.stock_level === undefined || createdItem.reorder_level === undefined || createdItem.price === undefined) {
+      alert('All fields must be filled out');
+      return;
+    }
+
     try {
       if (fileUploaded) {
         // console.log(fileUploaded);
@@ -352,6 +364,7 @@ const InventoryManagement = () => {
                   type="text"
                   name="product_name"
                   onChange={handleChangeInAdd}
+                  required
                 />
                 </label>
                 <label>
@@ -360,6 +373,7 @@ const InventoryManagement = () => {
                   type="text"
                   name="category"
                   onChange={handleChangeInAdd}
+                  required
                 />
                 </label>
                 <label>
@@ -368,6 +382,9 @@ const InventoryManagement = () => {
                   type="number"
                   name="stock_level"
                   onChange={handleChangeInAdd}
+                  required
+                  min={0}
+                  max={100}
                 />
                 </label>
                 <label>
@@ -376,6 +393,9 @@ const InventoryManagement = () => {
                   type="number"
                   name="reorder_level"
                   onChange={handleChangeInAdd}
+                  required
+                  min={0}
+                  max={100}
                 />
                 </label>
                 <label>
@@ -384,6 +404,8 @@ const InventoryManagement = () => {
                   type="number"
                   name="price"
                   onChange={handleChangeInAdd}
+                  required
+                  min={0}
                 />
                 </label>
               </>
@@ -409,6 +431,7 @@ const InventoryManagement = () => {
                 type="file"
                 accept=".xlsx, .xls"
                 onChange={handleForecastFileChange}
+                required
               />
               </label>
               {fileUploaded && (
@@ -438,6 +461,7 @@ const InventoryManagement = () => {
                     name="product_name"
                     value={editingItem.product_name}
                     onChange={handleChange}
+                    required
                   />
                 </label>
                 <label>
@@ -447,6 +471,7 @@ const InventoryManagement = () => {
                     name="category"
                     value={editingItem.category}
                     onChange={handleChange}
+                    required
                   />
                 </label>
                 <label>
@@ -456,6 +481,10 @@ const InventoryManagement = () => {
                     name="stock_level"
                     value={editingItem.stock_level}
                     onChange={handleChange}
+                    required
+                    min={0}
+                    max={100}
+
                   />
                 </label>
                 <label>
@@ -465,6 +494,9 @@ const InventoryManagement = () => {
                     name="reorder_level"
                     value={editingItem.reorder_level}
                     onChange={handleChange}
+                    required
+                    min={0}
+                    max={100}
                   />
                 </label>
                 <label>
@@ -474,6 +506,8 @@ const InventoryManagement = () => {
                     name="price"
                     value={editingItem.price}
                     onChange={handleChange}
+                    required
+                    min={0}
                   />
                 </label>
             </form>
@@ -496,6 +530,9 @@ const InventoryManagement = () => {
                     type="number"
                     name="estimated_month"
                     onChange={handleChangeEstimatedMonth}
+                    required
+                    min={1}
+                    max={12}
                   />
                 </label>
             </form>
