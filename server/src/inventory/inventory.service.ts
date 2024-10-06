@@ -28,13 +28,11 @@ export class InventoryService {
     })
     return this.databaseService.inventory.findMany()
   }
-
+  
   async findOne(id: number) {
-    return this.databaseService.inventory.findUnique({
-      where: {
-        id: id
-      }
-    })
+    return this.databaseService.inventory.findFirst({
+      where: { id },
+    });
   }
 
   async update(id: number, updateInventoryDto: Prisma.InventoryUpdateInput) {
@@ -78,5 +76,24 @@ export class InventoryService {
 
     // Return CSV as buffer
     return Buffer.from(csv);
+  }
+
+  async search(searchTerm: string) {
+    return this.databaseService.inventory.findMany({
+      where: {
+        OR: [
+          {
+            product_name: {
+              contains: searchTerm,
+            },
+          },
+          {
+            category: {
+              contains: searchTerm,
+            },
+          },
+        ],
+      },
+    });
   }
 }

@@ -100,7 +100,7 @@ const Sidebar = () => {
             </Link>
           </li>
           <li>
-            <Link href="/inventory/inventory-management" passHref>
+            <Link href="/Inventory/inventory-management" passHref>
               <button
                 className={`middle none font-sans font-bold center transition-all text-xs py-3 rounded-lg text-white w-full flex items-center gap-4 px-4 capitalize ${
                   isActive("/inventory")

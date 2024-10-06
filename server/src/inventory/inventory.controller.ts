@@ -7,6 +7,7 @@ import { Express } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import * as xlsx from 'xlsx'; 
 import { Response } from 'express';
+import { log } from 'console';
 
 @Controller('inventory')
 export class InventoryController {
@@ -22,7 +23,7 @@ export class InventoryController {
     return this.inventoryService.findAll(category);
   }
 
-  @Get(':id')
+  @Get('get/:id')
   findOne(@Param('id') id: string) {
     return this.inventoryService.findOne(+id);
   }
@@ -82,6 +83,16 @@ export class InventoryController {
         error: error.message,
       });
     }
+  }
+
+  // create an endpoint for this http://localhost:5500/api/v1/inventory/search?searchTerm=${searchTerm}
+  // how to test this endpoint
+  // http://localhost:5500/api/v1/inventory/search?searchTerm=shoes
+
+  @Get('search')
+  search(@Query('searchTerm') searchTerm: string) {
+    // console.log('searchTerm', searchTerm);
+    return this.inventoryService.search(searchTerm);
   }
 
 }

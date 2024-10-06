@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import styles from './styles.module.css';
 import axios from 'axios';
 import { log } from 'console';
+import { FaSearch } from 'react-icons/fa';
 
 interface InventoryItem {
   id: string;
@@ -19,9 +20,15 @@ const InventoryManagement = () => {
   const [editingItem, setEditingItem] = useState<InventoryItem | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [showModalCreate, setShowModalCreate] = useState(false);
+  const [showModalReport, setShowModalReport] = useState(false);
+  const [showModalEstimation, setShowModalEstimation] = useState(false);
+
   const [createdItem, setCreatedItem] = useState<Partial<InventoryItem> | null>(null);
 
   const [fileUploaded, setFileUploaded] = useState(null);
+  const [forecastFileUploaded, setForecastFileUploaded] = useState(null);
+  
+  const [estimatedMonth, setEstimatedMonth] = useState<Partial<InventoryItem> | null>(null);
 
   useEffect(() => {
     fetch('http://localhost:5500/api/v1/inventory')
@@ -31,7 +38,7 @@ const InventoryManagement = () => {
   }, []);
 
   const handleEditClick = (id) => {
-    fetch(`http://localhost:5500/api/v1/inventory/${id}`)
+    fetch(`http://localhost:5500/api/v1/inventory/get/${id}`)
       .then(response => response.json())
       .then(data => {
         setEditingItem(data);
@@ -145,13 +152,40 @@ const InventoryManagement = () => {
       console.error('Error adding item:', error);
     }
   };
+  
+  const handleForecasting = async () => {
+    try {
+      if (forecastFileUploaded) {
+        console.log(forecastFileUploaded);
+
+        const formData = new FormData();
+        formData.append('file', forecastFileUploaded);
+
+        const response = await axios.post(`http://localhost:5500/api/v1/sales-history/bulk`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          }
+        });
+
+        generateReport();
+
+      }
+
+      setShowModalEstimation(false);
+
+    } catch (error) {
+      console.error('Error adding forecasting:', error);
+    }
+  };
 
   const closeCreateModal = () => {
     setShowModalCreate(false);
+    setShowModalEstimation(false);
   };
 
   const handleCancel = () => {
     setShowModal(false);
+    setShowModalReport(false);
   };
 
   const handleChangeInAdd = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -172,14 +206,88 @@ const InventoryManagement = () => {
     
   };
   
+  const handleForecastFileChange = (event) => {
+    setForecastFileUploaded(event.target.files[0]);
+    console.log(event.target.files[0]);
+    
+  };
+ 
+  const handleChangeEstimatedMonth = (e) => {
+    const { name, value } = e.target;
+    const updatedValue = e.target.type === "number" ? Number(value) : value;
+    console.log(updatedValue);
+    
+    setEstimatedMonth({ ...estimatedMonth, [name]: updatedValue });
+  };
 
+  // const handleFileChange = (event) => {
+  //   setFileUploaded(event.target.files[0]);
+  //   console.log(event.target.files[0]);
+    
+  // };
+
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const generateReport = async () => {
+    try {
+      const response = await fetch(`http://localhost:5500/api/v1/estimations/report`);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = url;
+      a.download = 'estimation_report.csv';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error generating report:', error);
+    }
+  }
+
+  const handleSearch = async (searchTerm: string) => {
+    try {
+      // console.log('Searching for:', searchTerm);
+      
+      const response = await fetch(`http://localhost:5500/api/v1/inventory/search?searchTerm=${searchTerm}`);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      setInventory(data);
+    } catch (error) {
+      console.error('Error searching:', error);
+    }
+  }
+  
   return (
     <div className={styles.inventoryContainer}>
+      <h1 className={styles.h1}>Inventory Management</h1>
       <div className={styles.top}>
-        <h1 className={styles.h1}>Inventory Management</h1>
-        <button className={styles.buttonAdd} onClick={() => setShowModalCreate(true)}>
-          + New Inventory
-        </button>
+        <div className={styles.searchBar}>
+          <FaSearch className={styles.searchIcon} />
+          <input
+            type="text"
+            placeholder="Search Product Name"
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              handleSearch(e.target.value);
+            }}
+            className={styles.searchInput}
+          />
+        </div>
+        <div className={styles.topRight}>
+          <button className={styles.buttonAdd} onClick={() => setShowModalCreate(true)}>
+            + New Inventory
+          </button>
+          <button className={styles.buttonAdd} onClick={() => setShowModalEstimation(true)}>
+            Calculate Estimations
+          </button>
+        </div>
       </div>
 
       {Array.isArray(inventory) && inventory.length > 0 ? (
@@ -288,6 +396,34 @@ const InventoryManagement = () => {
             </div>
           </div>
         )}
+      
+      {/* Modal for estimations*/}
+      {showModalEstimation && (
+        <div className={styles.modal}>
+          <div className={styles.modalContent}>
+            <h2>Add Sales Forecasts</h2>
+            <form>
+              <label>
+              Upload Forecast File:
+              <input
+                type="file"
+                accept=".xlsx, .xls"
+                onChange={handleForecastFileChange}
+              />
+              </label>
+              {fileUploaded && (
+              <>
+                
+              </>
+              )}
+            </form>
+              <div className={styles.modalActions}>
+                <button onClick={handleForecasting} className={styles.button}>Add</button>
+                <button onClick={closeCreateModal} className={styles.button}>Cancel</button>
+              </div>
+            </div>
+          </div>
+        )}
         
         {/* Modal for Editing Item */}
         {showModal && editingItem && (
@@ -343,6 +479,28 @@ const InventoryManagement = () => {
             </form>
             <div className={styles.modalActions}>
               <button onClick={handleUpdate} className={styles.button}>Update</button>
+              <button onClick={handleCancel} className={styles.button}>Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
+        {/* Modal for report generation */}
+        {showModalReport && (
+          <div className={styles.modal}>
+            <div className={styles.modalContent}>
+              <h2>Generate Report</h2>
+              <form>
+                <label>
+                  Estimated Month:
+                  <input
+                    type="number"
+                    name="estimated_month"
+                    onChange={handleChangeEstimatedMonth}
+                  />
+                </label>
+            </form>
+            <div className={styles.modalActions}>
+              <button onClick={generateReport} className={styles.button}>Generate</button>
               <button onClick={handleCancel} className={styles.button}>Cancel</button>
             </div>
           </div>
