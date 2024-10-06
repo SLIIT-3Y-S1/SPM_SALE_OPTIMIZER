@@ -3,6 +3,11 @@ import { Injectable } from '@nestjs/common';
 // import { UpdateInventoryDto } from './dto/update-inventory.dto';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/database/prisma.service';
+import * as xlsx from 'xlsx'; 
+import * as PDFDocument from 'pdfkit';
+import { Response } from 'express';
+import { log } from 'console';
+import { Parser } from 'json2csv';
 
 @Injectable()
 export class InventoryService {
@@ -23,13 +28,11 @@ export class InventoryService {
     })
     return this.databaseService.inventory.findMany()
   }
-
+  
   async findOne(id: number) {
-    return this.databaseService.inventory.findUnique({
-      where: {
-        id
-      }
-    })
+    return this.databaseService.inventory.findFirst({
+      where: { id },
+    });
   }
 
   async update(id: number, updateInventoryDto: Prisma.InventoryUpdateInput) {
@@ -52,6 +55,45 @@ export class InventoryService {
   async createMany(createInventoryDto: Prisma.InventoryCreateManyInput[]) {
     return this.databaseService.inventory.createMany({
       data: createInventoryDto,
+    });
+  }
+
+  async generateReport(): Promise<Buffer> {
+    console.log('Generating CSV report');
+    const inventories = await this.findAll(); // Retrieves all inventory items
+
+    // Check if inventories were retrieved
+    if (!inventories || inventories.length === 0) {
+      throw new Error('No inventory data found'); // Handle case where no data is found
+    }
+
+    // Define the CSV fields (column headers)
+    const fields = ['id', 'product_name', 'category', 'stock_level', 'reorder_level', 'price'];
+
+    // Map inventories to CSV-friendly data format
+    const csvParser = new Parser({ fields });
+    const csv = csvParser.parse(inventories);
+
+    // Return CSV as buffer
+    return Buffer.from(csv);
+  }
+
+  async search(searchTerm: string) {
+    return this.databaseService.inventory.findMany({
+      where: {
+        OR: [
+          {
+            product_name: {
+              contains: searchTerm,
+            },
+          },
+          {
+            category: {
+              contains: searchTerm,
+            },
+          },
+        ],
+      },
     });
   }
 }
