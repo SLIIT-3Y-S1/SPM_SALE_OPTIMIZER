@@ -191,27 +191,32 @@ export class SpecialFunctionService {
     const openai = new OpenAIApi(configuration);
     */
 
-    try {
-      const response = openai.chat.completions.create({
-        model: 'gpt-4o-mini',
-        messages: [
-          {
-            role: 'system',
-            content:
-              'You are the sales performance analyst of a fashion retail store.Using given key data points of 2 timelines,provide performance insights seperately in points and outline abnormailites',
-          },
-          {
-            role: 'user',
-            content: '',
-          },
-        ],
-      });
-      //return insights
-      return response.choices[0].message;
-      console.log(response.choices[0].message);
-    } catch (error) {
-      console.error('Error fetching AI insights:', error);
-      return 'AI service unavailable. Unable to generate insights.';
+    async function fetchAIInsights() {
+      try {
+        const response = await openai.chat.completions.create({
+          model: 'gpt-4o-mini',
+          messages: [
+            {
+              role: 'system',
+              content:
+                'You are the sales performance analyst of a fashion retail store. Using given key data points of 2 timelines, provide performance insights separately in points and outline abnormalities',
+            },
+            {
+              role: 'user',
+              content: '', // Add user content here
+            },
+          ],
+        });
+    
+        // Return insights after awaiting the response
+        const message = response.choices[0].message;
+        console.log(message);
+        return message;
+    
+      } catch (error) {
+        console.error('Error fetching AI insights:', error);
+        return 'AI service unavailable. Unable to generate insights.';
+      }
     }
-  }
-}
+    
+}}

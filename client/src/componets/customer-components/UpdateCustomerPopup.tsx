@@ -37,7 +37,7 @@ const UpdateCustomerPopup: React.FC<UpdateCustomerProps> = ({ onClose, customer,
     };
 
     try {
-      const result = await updateCustomer(customerData);
+      const result = await updateCustomer(customerData); // Call the PATCH function
       if (result) {
         console.log('Customer updated successfully:', result);
         onUpdateSuccess(); // Call the success callback to refetch data

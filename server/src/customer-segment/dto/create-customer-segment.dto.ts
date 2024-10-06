@@ -8,12 +8,11 @@ export class CreateCustomerSegmentDto {
     last_name: string;
     email: string;
     phone_number: string;
+    dob :Date;
     created_at: Date;
     updated_at: Date;
 
     */ 
-    @IsUUID()
-    customer_id: string;
 
     @IsString()
     first_name: string;
@@ -26,6 +25,9 @@ export class CreateCustomerSegmentDto {
 
     @IsString()
     phone_number: string;
+
+    @IsString()
+    dob: string; //date of birth
 
     @IsDate()
     @Type(() => Date)  // Transform string to Date

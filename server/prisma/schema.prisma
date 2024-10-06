@@ -24,6 +24,7 @@ model Customer {
   last_name    String
   email        String   @unique
   phone_number String
+  dob          String?
   created_at   DateTime @default(now())
   updated_at   DateTime @updatedAt
 
@@ -36,6 +37,7 @@ model Customer {
 model Order {
   order_id     String   @id @default(uuid())
   customer_id  String
+  province    String  
   order_status String   @default("pending") // enum can be used if necessary
   total_amount Float
   created_at   DateTime @default(now())

@@ -13,13 +13,14 @@ const AddCustomerPopup: React.FC<AddCustomerPopupProps> = ({ onClose, onSaveSucc
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [dob, setdob] = useState("");
   const [loading, setLoading] = useState(false); // Track loading state
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true); // Start loading
 
-    if (!firstName || !lastName || !email || !phoneNumber) {
+    if (!firstName || !lastName || !email || !phoneNumber || !dob) {
       console.error('Please fill all fields');
       alert('Please fill all fields');
       setLoading(false);
@@ -30,6 +31,7 @@ const AddCustomerPopup: React.FC<AddCustomerPopupProps> = ({ onClose, onSaveSucc
       last_name: lastName,
       email,
       phone_number: phoneNumber,
+      dob:dob,
     };
 
     try {
@@ -47,18 +49,18 @@ const AddCustomerPopup: React.FC<AddCustomerPopupProps> = ({ onClose, onSaveSucc
       setLoading(false); // Stop loading
     }
   };
-
+  const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50">
-      <div className="py-3 sm:max-w-xl sm:mx-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50 ">
+      <div className="py-3 sm:max-w-xl sm:mx-auto my-8">
         <div className="bg-white min-w-1xl flex flex-col rounded-xl shadow-lg">
           <div className="px-12 py-5">
-            <h2 className="text-gray-800 text-3xl font-semibold">Add A Customer</h2>
+            <h2 className="text-gray-800 text-2xl font-semibold">Add A Customer</h2>
           </div>
           <form onSubmit={handleSubmit}>
             <div className="bg-gray-200 w-full flex flex-col items-center">
               <div className="flex flex-col items-center py-6 space-y-3">
-                <div className="w-[500px] flex flex-col pl-10 pr-10">
+                <div className="w-[400px] flex flex-col pl-10 pr-10">
                   <label className="text-gray-800 text-lg font-semibold" htmlFor="first_name">
                     First Name
                   </label>
@@ -70,7 +72,7 @@ const AddCustomerPopup: React.FC<AddCustomerPopupProps> = ({ onClose, onSaveSucc
                     onChange={(e) => setFirstName(e.target.value)}
                   />
                 </div>
-                <div className="w-[500px] flex flex-col pl-10 pr-10">
+                <div className="w-[400px] flex flex-col pl-10 pr-10">
                   <label className="text-gray-800 text-lg font-semibold" htmlFor="last_name">
                     Last Name
                   </label>
@@ -82,7 +84,7 @@ const AddCustomerPopup: React.FC<AddCustomerPopupProps> = ({ onClose, onSaveSucc
                     onChange={(e) => setLastName(e.target.value)}
                   />
                 </div>
-                <div className="w-[500px] flex flex-col pl-10 pr-10">
+                <div className="w-[400px] flex flex-col pl-10 pr-10">
                   <label className="text-gray-800 text-lg font-semibold" htmlFor="email">
                     Email
                   </label>
@@ -94,7 +96,7 @@ const AddCustomerPopup: React.FC<AddCustomerPopupProps> = ({ onClose, onSaveSucc
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
-                <div className="w-[500px] flex flex-col pl-10 pr-10">
+                <div className="w-[400px] flex flex-col pl-10 pr-10">
                   <label className="text-gray-800 text-lg font-semibold" htmlFor="phone_number">
                     Phone Number
                   </label>
@@ -106,8 +108,21 @@ const AddCustomerPopup: React.FC<AddCustomerPopupProps> = ({ onClose, onSaveSucc
                     onChange={(e) => setPhoneNumber(e.target.value)}
                   />
                 </div>
+                <div className="w-[400px] flex flex-col pl-10 pr-10">
+                  <label className="text-gray-800 text-lg font-semibold" htmlFor="dob">
+                    Date Of Birth
+                  </label>
+                  <input
+                    className="py-3 px-4 mt-2 w-full rounded-xl border border-gray-300"
+                    type="date" // Change this to 'date'
+                    id="dob"
+                    value={dob} // Use the state variable for DOB
+                    onChange={(e) => setdob(e.target.value)} // This will get the date as a string
+                    max={today} // Set maximum date to today
+                  />
+                </div>
               </div>
-              <div className="w-[500px] flex flex-col pl-10 pr-10">
+              <div className="w-[400px] flex flex-col pl-10 pr-10">
                 <button
                   type="submit"
                   className={`py-3 my-8 text-lg bg-gradient-to-r from-purple-500 to-indigo-600 rounded-xl text-white flex items-center justify-center ${loading ? "opacity-50" : ""}`}
