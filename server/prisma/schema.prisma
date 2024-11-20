@@ -127,12 +127,36 @@ model Sale {
 }
 
 model Inventory {
-  id            Int      @id @default(autoincrement())
-  product_name  String
-  category      String
-  stock_level   Int
-  reorder_level Int
-  price         Float
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id              Int               @id @default(autoincrement())
+  product_name    String
+  category        String
+  stock_level     Int
+  reorder_level   Int
+  price           Float
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  HistoricalSales HistoricalSales[]
+  Estimations     Estimations[]
+}
+
+model HistoricalSales {
+  id          Int       @id @default(autoincrement())
+  product_id  Int
+  year        Int
+  month       Int
+  sales_units Float
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  inventory   Inventory @relation(fields: [product_id], references: [id])
+}
+
+model Estimations {
+  id         Int       @id @default(autoincrement())
+  product_id Int
+  year       Int
+  month      Int
+  estimate   Int
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  inventory  Inventory @relation(fields: [product_id], references: [id])
 }
