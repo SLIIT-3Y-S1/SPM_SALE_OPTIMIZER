@@ -1,4 +1,16 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateCustomerSegmentDto } from './create-customer-segment.dto';
+import { IsString,IsEmail } from 'class-validator';
 
-export class UpdateCustomerSegmentDto extends PartialType(CreateCustomerSegmentDto) {}
+export class UpdateCustomerSegmentDto{
+
+    @IsString()
+    first_name: string;
+
+    @IsString()
+    last_name: string;
+
+    @IsEmail()
+    email: string;
+
+    @IsString()
+    phone_number: string;
+}
